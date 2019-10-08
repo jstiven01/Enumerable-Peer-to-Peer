@@ -2,28 +2,28 @@
 
 # Project 2: Enumerable Methods
 module Enumerable
-    def my_each
-      # your code here
-      if self.is_a?(Array)
-        (self.length).times do |i|
-            yield (self[i])
-        end
-      elsif self.is_a?(Hash)
-        (self.keys.length).times do |i|
-          yield [self.keys[i], self.values[i]]
-        end
+  def my_each(object)
+    if object.is_a?(Array)
+      object.length.times do |i|
+        yield (object[i])
+      end
+    elsif object.is_a?(Hash)
+      object.keys.length.times do |i|
+        yield [object.keys[i], object.values[i]]
       end
     end
+  end
 end
 
-test = [1,343,3,4]
-#test = {
-#    jaws: "hey",
-#    gadfs: "hey1121",
-#    rrr: "hey1212100000"
-#}
+#test = [1,343,3,4]
+=begin test = {
+    jaws: "hey",
+    gadfs: "hey1121",
+    rrr: "hey1212100000"
+} =end
 #p test.keys.length
-test.my_each {|x| p x}
-#test.my_each {|x, y| p x, y}
+include Enumerable
+#my_each([1,343,3,4]) {|x| p x}
+my_each(test) {|x, y| p x, y}
 
 
