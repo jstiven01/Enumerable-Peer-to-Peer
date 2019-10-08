@@ -131,12 +131,15 @@ module Enumerable
     new_object
   end
 
-  def my_inject(object)
-    acc = 0
+  def my_inject(object, acc = 0)
     my_each(object) do |x|
       acc = yield acc, x
     end
     acc
+  end
+
+  def multiply_els(arr)
+    my_inject(arr, 1){|product, x| product * x}
   end
 end
 
@@ -224,8 +227,11 @@ p 'hash',c,d
 a = my_map(test){|x| x + 5}
 b = test.map{|x| x + 5}
 p a,b
-=end
+
 #myinject
 a = my_inject(test){|sum, x|  x + sum}
 b = test.inject{|sum, x| x + sum}
 p a,b
+=end
+p multiply_els(test)
+p test.inject{|prod, x| prod * x}
