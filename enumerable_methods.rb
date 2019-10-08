@@ -104,6 +104,24 @@ module Enumerable
     end
     flag
   end
+
+  def my_count(object, number = nil)
+    count = 0
+    if object.is_a?(Array)
+      my_each(object) do |x|
+        next unless (number != nil && x == number) || (number == nil && (yield x) )
+          
+        count +=1
+      end
+    elsif object.is_a?(Hash)
+      my_each(object) do |key, value|
+        next unless (number != nil && x == number) || (number == nil && (yield [key, value]) )
+
+        count +=1
+      end
+    end
+    count
+  end
 end
 
 
@@ -162,7 +180,7 @@ p a,b
 c = my_any?(testhashnumbers){|key, value| value > 800}
 d = testhashnumbers.any?{|key, value| value > 800}
 p 'hash',c,d
-=end
+
 
 a = my_none?(test){|x| x > 800}
 b = test.none?{|x| x > 800}
@@ -170,4 +188,18 @@ p a,b
 
 c = my_none?(testhashnumbers){|key, value| value > 500}
 d = testhashnumbers.none?{|key, value| value > 500}
+p 'hash',c,d
+=end
+
+#counting number
+a = my_count(test,1)
+b = test.count(1)
+p a,b
+
+x = my_count(test){|x| x > 300}
+y = test.count{|x| x > 300}
+p x,y
+
+c = my_count(testhashnumbers){|key, value| value < 500}
+d = testhashnumbers.count{|key, value| value < 500}
 p 'hash',c,d
