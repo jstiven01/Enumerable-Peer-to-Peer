@@ -30,7 +30,7 @@ module Enumerable
     if object.is_a?(Array)
       new_object = []
       my_each(object) do |x|
-        next unless yield (x)
+        next unless yield x
 
         new_object.push(x)
       end
@@ -44,12 +44,12 @@ module Enumerable
     end
     new_object
   end
-  
+
   def my_all?(object)
     flag = true
     if object.is_a?(Array)
       my_each(object) do |x|
-        next if yield (x)
+        next if yield x
 
         flag = false
         break
@@ -64,10 +64,30 @@ module Enumerable
     end
     flag
   end
+
+  def my_any?(object)
+    flag = false
+    if object.is_a?(Array)
+      my_each(object) do |x|
+        next unless yield x
+
+        flag = true
+        break
+      end
+    elsif object.is_a?(Hash)
+      my_each(object) do |key, value|
+        next unless yield [key, value]
+
+        flag = true
+        break
+      end
+    end
+    flag
+  end
 end
 
 
-test = [1,343,3,4,2,1]
+test = [1,343,3,4,600,1]
 testhash = {
     jaws: "hey",
     gadfs: "hey1121",
@@ -77,7 +97,8 @@ testhash = {
 testhashnumbers = {
   a: 1,
   b: 2,
-  c: 200
+  c: 200,
+  d: 600
 }
 #p test.keys.length
 include Enumerable
@@ -104,11 +125,20 @@ p a,b
 c = my_select(testhash){|key, value| value == "hey" || key == :rrr}
 d = testhash.select{|key, value| value == "hey" || key == :rrr }
 p  c,d
-=end
+
 a = my_all?(test){|x| x > 500}
 b = test.all?{|x| x > 500}
 p a,b
 
 c = my_all?(testhashnumbers){|key, value| value < 500}
 d = testhashnumbers.all?{|key, value| value < 500}
+p 'hash',c,d
+=end
+
+a = my_any?(test){|x| x > 500}
+b = test.any?{|x| x > 500}
+p a,b
+
+c = my_any?(testhashnumbers){|key, value| value > 800}
+d = testhashnumbers.any?{|key, value| value > 800}
 p 'hash',c,d
