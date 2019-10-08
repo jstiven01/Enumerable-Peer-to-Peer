@@ -130,6 +130,14 @@ module Enumerable
     end
     new_object
   end
+
+  def my_inject(object)
+    acc = 0
+    my_each(object) do |x|
+      acc = yield acc, x
+    end
+    acc
+  end
 end
 
 
@@ -211,8 +219,13 @@ p x,y
 c = my_count(testhashnumbers){|key, value| value < 500}
 d = testhashnumbers.count{|key, value| value < 500}
 p 'hash',c,d
-=end
+
 #mymap
 a = my_map(test){|x| x + 5}
 b = test.map{|x| x + 5}
+p a,b
+=end
+#myinject
+a = my_inject(test){|sum, x|  x + sum}
+b = test.inject{|sum, x| x + sum}
 p a,b
