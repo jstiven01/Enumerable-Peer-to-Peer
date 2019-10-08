@@ -28,19 +28,41 @@ module Enumerable
 
   def my_select(object)
     if object.is_a?(Array)
-      newObject = Array.new
+      new_object = []
       my_each(object) do |x|
-        next if !yield (x)
-        newObject.push(x)
+        next unless yield (x)
+
+        new_object.push(x)
       end
     elsif object.is_a?(Hash)
-      newObject = Hash.new
+      new_object = {}
       my_each(object) do |key, value|
-        next if !yield [key, value]
-        newObject[key] = value
+        next unless yield [key, value]
+
+        new_object[key] = value
       end
     end
-    newObject
+    new_object
+  end
+  
+  def my_all?(object)
+    flag = true
+    if object.is_a?(Array)
+      my_each(object) do |x|
+        next if yield (x)
+
+        flag = false
+        break
+      end
+    elsif object.is_a?(Hash)
+      my_each(object) do |key, value|
+        next if yield [key, value]
+
+        flag = false
+        break
+      end
+    end
+    flag
   end
 end
 
@@ -50,6 +72,12 @@ testhash = {
     jaws: "hey",
     gadfs: "hey1121",
     rrr: "hey1212100000"
+}
+
+testhashnumbers = {
+  a: 1,
+  b: 2,
+  c: 200
 }
 #p test.keys.length
 include Enumerable
@@ -67,7 +95,7 @@ p "Hash"
 testhash.each_with_index{|x, index| p x, index}
 p "---"
 my_each_with_index(testhash){|x, index| p x, index}
-=end
+
 
 a = my_select(test){|x| x < 3}
 b = test.select{|x| x < 3}
@@ -76,3 +104,11 @@ p a,b
 c = my_select(testhash){|key, value| value == "hey" || key == :rrr}
 d = testhash.select{|key, value| value == "hey" || key == :rrr }
 p  c,d
+=end
+a = my_all?(test){|x| x > 500}
+b = test.all?{|x| x > 500}
+p a,b
+
+c = my_all?(testhashnumbers){|key, value| value < 500}
+d = testhashnumbers.all?{|key, value| value < 500}
+p 'hash',c,d
