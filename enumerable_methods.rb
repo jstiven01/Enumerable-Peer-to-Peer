@@ -1,8 +1,7 @@
 # frozen_string_literal: true
-# rubocop:disable Metrics/LineLength
 
 # Project 2: Enumerable Methods
-module Enumerable
+module Enumerable # rubocop:disable Metrics/ModuleLength
   def my_each(object)
     if object.is_a?(Array)
       object.length.times do |i|
@@ -106,17 +105,17 @@ module Enumerable
     flag
   end
 
-  def my_count(object, number = nil)
+  def my_count(object)
     count = 0
     if object.is_a?(Array)
       my_each(object) do |x|
-        next unless (!number.nil? && x == number) || (number.nil? && (yield x))
+        next unless yield x
 
         count += 1
       end
     elsif object.is_a?(Hash)
       my_each(object) do |key, value|
-        next unless (!number.nil? && x == number) || (number.nil? && (yield [key, value]))
+        next unless yield [key, value]
 
         count += 1
       end
@@ -147,3 +146,9 @@ module Enumerable
     my_inject(arr, 1) { |product, x| product * x }
   end
 end
+
+include Enumerable
+test = [1,343,3,4,600,1]
+x = my_count(test){|x| x > 300}
+y = test.count{|x| x > 300}
+p x,y
