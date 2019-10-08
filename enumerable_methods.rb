@@ -84,6 +84,26 @@ module Enumerable
     end
     flag
   end
+
+  def my_none?(object)
+    flag = true
+    if object.is_a?(Array)
+      my_each(object) do |x|
+        next unless yield x
+
+        flag = false
+        break
+      end
+    elsif object.is_a?(Hash)
+      my_each(object) do |key, value|
+        next unless yield [key, value]
+
+        flag = false
+        break
+      end
+    end
+    flag
+  end
 end
 
 
@@ -133,7 +153,7 @@ p a,b
 c = my_all?(testhashnumbers){|key, value| value < 500}
 d = testhashnumbers.all?{|key, value| value < 500}
 p 'hash',c,d
-=end
+
 
 a = my_any?(test){|x| x > 500}
 b = test.any?{|x| x > 500}
@@ -141,4 +161,13 @@ p a,b
 
 c = my_any?(testhashnumbers){|key, value| value > 800}
 d = testhashnumbers.any?{|key, value| value > 800}
+p 'hash',c,d
+=end
+
+a = my_none?(test){|x| x > 800}
+b = test.none?{|x| x > 800}
+p a,b
+
+c = my_none?(testhashnumbers){|key, value| value > 500}
+d = testhashnumbers.none?{|key, value| value > 500}
 p 'hash',c,d
