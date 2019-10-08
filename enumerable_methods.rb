@@ -146,9 +146,3 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     my_inject(arr, 1) { |product, x| product * x }
   end
 end
-
-include Enumerable
-test = [1,343,3,4,600,1]
-x = my_count(test){|x| x > 300}
-y = test.count{|x| x > 300}
-p x,y
