@@ -109,18 +109,26 @@ module Enumerable
     count = 0
     if object.is_a?(Array)
       my_each(object) do |x|
-        next unless (number != nil && x == number) || (number == nil && (yield x) )
-          
-        count +=1
+        next unless (!number.nil? && x == number) || (number.nil? && (yield x))
+
+        count += 1
       end
     elsif object.is_a?(Hash)
       my_each(object) do |key, value|
-        next unless (number != nil && x == number) || (number == nil && (yield [key, value]) )
+        next unless (!number.nil? && x == number) || (number.nil? && (yield [key, value]))
 
-        count +=1
+        count += 1
       end
     end
     count
+  end
+
+  def my_map(object)
+    new_object = []
+    my_each(object) do |x|
+      new_object.push(yield x)
+    end
+    new_object
   end
 end
 
@@ -189,7 +197,7 @@ p a,b
 c = my_none?(testhashnumbers){|key, value| value > 500}
 d = testhashnumbers.none?{|key, value| value > 500}
 p 'hash',c,d
-=end
+
 
 #counting number
 a = my_count(test,1)
@@ -203,3 +211,8 @@ p x,y
 c = my_count(testhashnumbers){|key, value| value < 500}
 d = testhashnumbers.count{|key, value| value < 500}
 p 'hash',c,d
+=end
+#mymap
+a = my_map(test){|x| x + 5}
+b = test.map{|x| x + 5}
+p a,b
