@@ -123,10 +123,14 @@ module Enumerable
     count
   end
 
-  def my_map(object)
+  def my_map(object, proc = false)
     new_object = []
     my_each(object) do |x|
-      new_object.push(yield x)
+      if !proc
+        new_object.push(yield x)
+      else
+        new_object.push(proc.call(x))
+      end
     end
     new_object
   end
@@ -139,7 +143,7 @@ module Enumerable
   end
 
   def multiply_els(arr)
-    my_inject(arr, 1){|product, x| product * x}
+    my_inject(arr, 1) { |product, x| product * x }
   end
 end
 
@@ -232,6 +236,16 @@ p a,b
 a = my_inject(test){|sum, x|  x + sum}
 b = test.inject{|sum, x| x + sum}
 p a,b
-=end
+
+#multiply_els
 p multiply_els(test)
 p test.inject{|prod, x| prod * x}
+=end
+#mymap
+a = my_map(test){|x| x + 5}
+b = test.map{|x| x + 5}
+p a,b
+
+newProc = Proc.new {|x| x + 5}
+a = my_map(test, &newProc)
+p "proc ", a
