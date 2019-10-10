@@ -42,47 +42,33 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     end
     flag
   end
-=begin
+
   def my_any?
     flag = false
-    if self.is_a?(Array)
-      my_each do |x|
-        next unless yield x
+    return !flag unless block_given?
 
-        flag = true
-        break
-      end
-    elsif self.is_a?(Hash)
-      my_each do |key, value|
-        next unless yield [key, value]
+    my_each do |x|
+      next unless yield x
 
-        flag = true
-        break
-      end
+      flag = true
+      break
     end
     flag
   end
 
   def my_none?
     flag = true
-    if self.is_a?(Array)
-      my_each do |x|
-        next unless yield x
+    return !flag unless block_given?
 
-        flag = false
-        break
-      end
-    elsif self.is_a?(Hash)
-      my_each do |key, value|
-        next unless yield [key, value]
+    my_each do |x|
+      next unless yield x
 
-        flag = false
-        break
-      end
+      flag = false
+      break
     end
     flag
   end
-
+=begin
   def my_count
     count = 0
     if self.is_a?(Array)
@@ -142,3 +128,10 @@ test = [1,343,3,4,600,1]
 #b = test.all?{|x| x > 500}
 #p a,b
 
+#a = test.my_any?
+#b = test.any?
+#p a,b
+
+a = test.my_none?
+b = test.none?
+p a,b
