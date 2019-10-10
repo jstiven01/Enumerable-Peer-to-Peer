@@ -70,15 +70,18 @@ module Enumerable
   end
 
   def my_count(number = nil)
-    return length unless block_given? || !number.nil?
 
     count = 0
-    my_each do |x|
-      if !number.nil? && number == x
-        count += 1
-      elsif block_given? && yield(x)
-        count += 1
+    if block_given?
+      my_each do |x|
+        count += 1 if yield(x)
       end
+    elsif number
+      my_each do |x|
+        count += 1 if element == number
+      end
+    else
+      count = length
     end
     count
   end
@@ -96,18 +99,40 @@ module Enumerable
     end
     new_self
   end
+ 
+  def my_inject(parm1 = nil, parm2 = nil)
+    operation = nil
+    if parm1.is_a?(Symbol) && parm2.nil? && !block_given?
+      operation = parm1.to_s
+      operation.sub! ":", ""
+      acc = self[0]
+      displace_position = 1
+    elsif parm1.is_a?(Integer) && parm2.is_a?(Symbol) && !block_given?
+      operation = parm2.to_s
+      operation.sub! ":", ""
+      acc = parm1
+      displace_position = 0
+    elsif parm1.is_a?(Integer) && block_given?
+      acc = parm1
+      displace_position = 0
+    elsif parm1.nil? && block_given?
+      acc = self[0]
+      displace_position = 1
+    end
 
-  def my_inject
-    acc = self[0]
-    (length - 1).times do |i|
-      acc = yield acc, self[i + 1]
+    (length - displace_position).times do |x|
+      if operation
+        acc = acc.method(operation).(self[x + displace_position])
+      else
+        acc = yield(acc, self[x + displace_position])
+      end
     end
     acc
-  end
+  end 
 
   def multiply_els(arr)
     arr.my_inject { |product, x| product * x }
-  end 
+  end
 
 end
 
@@ -147,5 +172,24 @@ test = [1,343,3,4,600,1]
 #b = test.inject(:+){|sum, x|  x + sum}
 #p  b
 
-#p multiply_els(test)
+#
 #p test.inject{|prod, x| prod * x}
+
+#a = test.my_inject{|sum, x|  x + sum}
+a = test.my_inject(10){|sum, x|  x + sum}
+b = test.inject(10){|sum, x|  x + sum}
+p  a,b
+
+a = test.my_inject(10,:+)
+b = test.inject(10,:+)
+p  a,b
+
+a = test.my_inject(:+)
+b = test.inject(:+)
+p  a,b
+
+a = test.my_inject{|sum, x|  x + sum}
+b = test.inject{|sum, x|  x + sum}
+p  a,b
+
+p multiply_els(test)
