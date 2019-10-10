@@ -98,8 +98,8 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     end
     new_self
   end
- 
-  def my_inject(parm1 = nil, parm2 = nil)
+
+  def my_inject(parm1 = nil, parm2 = nil) # rubocop:disable Metrics/CyclomaticComplexity
     if block_given? && parm1
       acc = parm1
       my_each { |element| acc = yield(acc, element) }
@@ -126,62 +126,3 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     arr.my_inject { |product, x| product * x }
   end
 end
-
-include Enumerable
-test = [1,343,3,4,600,1]
-#test.length.times do |x|
-#  p test[x]
-#  end
-#p test.my_each
-#test.my_each_with_index{|x, i| print x, "-", i," "}
-
-#a = test.my_select
-#b = test.select
-#p a,b
-
-#a = test.my_all?{|x| x > 500}
-#b = test.all?{|x| x > 500}
-#p a,b
-
-#a = test.my_any?
-#b = test.any?
-#p a,b
-
-#a = test.my_none?
-#b = test.none?
-#p a,b
-
-#a = test.my_count
-#b = test.count
-#p a,b
-#newProc = Proc.new {|x| x + 5}
-#a = test.my_map(&newProc)
-#b = test.map(&newProc)
-#p a,b
-
-#a = test.my_inject{|sum, x|  x + sum}
-#b = test.inject(:+){|sum, x|  x + sum}
-#p  b
-
-#
-#p test.inject{|prod, x| prod * x}
-
-#a = test.my_inject{|sum, x|  x + sum}
-a = test.my_inject(10){|sum, x|  x + sum}
-b = test.inject(10){|sum, x|  x + sum}
-p  a,b
-
-a = test.my_inject(10,:+)
-b = test.inject(10,:+)
-p  a,b
-
-a = test.my_inject(:+)
-b = test.inject(:+)
-p  a,b
-
-a = test.my_inject{|sum, x|  x + sum}
-b = test.inject{|sum, x|  x + sum}
-p  a,b
-
-p multiply_els(test)
-
