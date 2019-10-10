@@ -2,60 +2,50 @@
 
 # Project 2: Enumerable Methods
 module Enumerable # rubocop:disable Metrics/ModuleLength
-  def my_each(object)
-    if object.is_a?(Array)
-      object.length.times do |i|
-        yield (object[i])
-      end
-    elsif object.is_a?(Hash)
-      object.keys.length.times do |i|
-        yield [object.keys[i], object.values[i]]
-      end
+  def my_each
+    return self.to_enum if !block_given?
+    length.times do |i|
+      yield (self[i])
     end
   end
-
-  def my_each_with_index(object)
-    if object.is_a?(Array)
-      object.length.times do |i|
-        yield [object[i], i]
-      end
-    elsif object.is_a?(Hash)
-      object.keys.length.times do |i|
-        yield [[object.keys[i], object.values[i]], i]
-      end
+ 
+  def my_each_with_index
+    return self.to_enum if !block_given?
+    length.times do |i|
+      yield [self[i], i]
     end
   end
-
-  def my_select(object)
-    if object.is_a?(Array)
-      new_object = []
-      my_each(object) do |x|
+=begin
+  def my_select
+    if self.is_a?(Array)
+      new_self = []
+      my_each do |x|
         next unless yield x
 
-        new_object.push(x)
+        new_self.push(x)
       end
-    elsif object.is_a?(Hash)
-      new_object = {}
-      my_each(object) do |key, value|
+    elsif self.is_a?(Hash)
+      new_self = {}
+      my_each do |key, value|
         next unless yield [key, value]
 
-        new_object[key] = value
+        new_self[key] = value
       end
     end
-    new_object
+    new_self
   end
 
-  def my_all?(object)
+  def my_all?
     flag = true
-    if object.is_a?(Array)
-      my_each(object) do |x|
+    if self.is_a?(Array)
+      my_each do |x|
         next if yield x
 
         flag = false
         break
       end
-    elsif object.is_a?(Hash)
-      my_each(object) do |key, value|
+    elsif self.is_a?(Hash)
+      my_each do |key, value|
         next if yield [key, value]
 
         flag = false
@@ -65,17 +55,17 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     flag
   end
 
-  def my_any?(object)
+  def my_any?
     flag = false
-    if object.is_a?(Array)
-      my_each(object) do |x|
+    if self.is_a?(Array)
+      my_each do |x|
         next unless yield x
 
         flag = true
         break
       end
-    elsif object.is_a?(Hash)
-      my_each(object) do |key, value|
+    elsif self.is_a?(Hash)
+      my_each do |key, value|
         next unless yield [key, value]
 
         flag = true
@@ -85,17 +75,17 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     flag
   end
 
-  def my_none?(object)
+  def my_none?
     flag = true
-    if object.is_a?(Array)
-      my_each(object) do |x|
+    if self.is_a?(Array)
+      my_each do |x|
         next unless yield x
 
         flag = false
         break
       end
-    elsif object.is_a?(Hash)
-      my_each(object) do |key, value|
+    elsif self.is_a?(Hash)
+      my_each do |key, value|
         next unless yield [key, value]
 
         flag = false
@@ -105,16 +95,16 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     flag
   end
 
-  def my_count(object)
+  def my_count
     count = 0
-    if object.is_a?(Array)
-      my_each(object) do |x|
+    if self.is_a?(Array)
+      my_each do |x|
         next unless yield x
 
         count += 1
       end
-    elsif object.is_a?(Hash)
-      my_each(object) do |key, value|
+    elsif self.is_a?(Hash)
+      my_each do |key, value|
         next unless yield [key, value]
 
         count += 1
@@ -123,20 +113,20 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     count
   end
 
-  def my_map(object, proc = false)
-    new_object = []
-    my_each(object) do |x|
+  def my_map(self, proc = false)
+    new_self = []
+    my_each do |x|
       if !proc
-        new_object.push(yield x)
+        new_self.push(yield x)
       else
-        new_object.push(proc.call(x))
+        new_self.push(proc.call(x))
       end
     end
-    new_object
+    new_self
   end
 
-  def my_inject(object, acc = 0)
-    my_each(object) do |x|
+  def my_inject(self, acc = 0)
+    my_each do |x|
       acc = yield acc, x
     end
     acc
@@ -144,5 +134,14 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
 
   def multiply_els(arr)
     my_inject(arr, 1) { |product, x| product * x }
-  end
+  end 
+=end
 end
+
+include Enumerable
+test = [1,343,3,4,600,1]
+#test.length.times do |x|
+#  p test[x]
+#  end
+#p test.my_each
+test.my_each_with_index{|x, i| print x, "-", i," "}
