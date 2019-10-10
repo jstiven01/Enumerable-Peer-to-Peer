@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Project 2: Enumerable Methods
-module Enumerable
+module Enumerable # rubocop:disable Metrics/ModuleLength
   def my_each
     return to_enum unless block_given?
 
@@ -100,15 +100,15 @@ module Enumerable
   end
  
   def my_inject(parm1 = nil, parm2 = nil)
-    if block_given? && !parm1.nil? 
+    if block_given? && parm1
       acc = parm1
       my_each { |element| acc = yield(acc, element) }
-    elsif block_given? && parm1.nil? 
+    elsif block_given? && !parm1
       acc = self[0]
       my_each_with_index do |element, index|
         acc = yield(acc, element) unless index.zero?
       end
-    elsif parm2.nil?
+    elsif !parm2
       acc = self[0]
       operation = parm1.to_proc
       my_each_with_index do |element, index|
@@ -120,12 +120,11 @@ module Enumerable
       my_each { |element| acc = operation.call(acc, element) }
     end
     acc
-  end 
+  end
 
   def multiply_els(arr)
     arr.my_inject { |product, x| product * x }
   end
-
 end
 
 include Enumerable
