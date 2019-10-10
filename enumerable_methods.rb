@@ -3,58 +3,46 @@
 # Project 2: Enumerable Methods
 module Enumerable # rubocop:disable Metrics/ModuleLength
   def my_each
-    return self.to_enum if !block_given?
+    return to_enum unless block_given?
+
     length.times do |i|
       yield (self[i])
     end
   end
- 
+
   def my_each_with_index
-    return self.to_enum if !block_given?
+    return to_enum unless block_given?
+
     length.times do |i|
       yield [self[i], i]
     end
   end
-=begin
+
   def my_select
-    if self.is_a?(Array)
-      new_self = []
-      my_each do |x|
-        next unless yield x
+    return to_enum unless block_given?
 
-        new_self.push(x)
-      end
-    elsif self.is_a?(Hash)
-      new_self = {}
-      my_each do |key, value|
-        next unless yield [key, value]
+    new_self = []
+    my_each do |x|
+      next unless yield x
 
-        new_self[key] = value
-      end
+      new_self.push(x)
     end
     new_self
   end
 
   def my_all?
     flag = true
-    if self.is_a?(Array)
-      my_each do |x|
-        next if yield x
+    return flag unless block_given?
 
-        flag = false
-        break
-      end
-    elsif self.is_a?(Hash)
-      my_each do |key, value|
-        next if yield [key, value]
+    my_each do |x|
+      next if yield x
 
-        flag = false
-        break
-      end
+      flag = false
+      break
     end
     flag
   end
-
+=begin
   def my_any?
     flag = false
     if self.is_a?(Array)
@@ -144,4 +132,13 @@ test = [1,343,3,4,600,1]
 #  p test[x]
 #  end
 #p test.my_each
-test.my_each_with_index{|x, i| print x, "-", i," "}
+#test.my_each_with_index{|x, i| print x, "-", i," "}
+
+#a = test.my_select
+#b = test.select
+#p a,b
+
+#a = test.my_all?{|x| x > 500}
+#b = test.all?{|x| x > 500}
+#p a,b
+
