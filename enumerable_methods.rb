@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Project 2: Enumerable Methods
-module Enumerable # rubocop:disable Metrics/ModuleLength
+module Enumerable
   def my_each
     return to_enum unless block_given?
 
@@ -70,11 +70,13 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
   end
 
   def my_count(number = nil)
-    return length unless (block_given? || !number.nil?)
+    return length unless block_given? || !number.nil?
 
     count = 0
     my_each do |x|
-      if !number.nil? && number == x || block_given? && yield(x)
+      if !number.nil? && number == x
+        count += 1
+      elsif block_given? && yield(x)
         count += 1
       end
     end
@@ -82,7 +84,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
   end
 
   def my_map
-    return to_enum unless (block_given?)
+    return to_enum unless block_given?
 
     new_self = []
     my_each do |x|
@@ -97,8 +99,8 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
 
   def my_inject
     acc = self[0]
-    (length-1).times do |i|
-      acc = yield acc, self[i+1]
+    (length - 1).times do |i|
+      acc = yield acc, self[i + 1]
     end
     acc
   end
