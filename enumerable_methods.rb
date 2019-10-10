@@ -68,26 +68,22 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     end
     flag
   end
-=begin
-  def my_count
+
+  def my_count(number = nil)
+    return length unless (block_given? || !number.nil?)
+
     count = 0
-    if self.is_a?(Array)
-      my_each do |x|
-        next unless yield x
-
-        count += 1
-      end
-    elsif self.is_a?(Hash)
-      my_each do |key, value|
-        next unless yield [key, value]
-
+    my_each do |x|
+      if !number.nil? && number == x || block_given? && yield(x)
         count += 1
       end
     end
     count
   end
 
-  def my_map(self, proc = false)
+  def my_map
+    return to_enum unless (block_given?)
+
     new_self = []
     my_each do |x|
       if !proc
@@ -99,17 +95,18 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     new_self
   end
 
-  def my_inject(self, acc = 0)
-    my_each do |x|
-      acc = yield acc, x
+  def my_inject
+    acc = self[0]
+    (length-1).times do |i|
+      acc = yield acc, self[i+1]
     end
     acc
   end
 
   def multiply_els(arr)
-    my_inject(arr, 1) { |product, x| product * x }
+    arr.my_inject { |product, x| product * x }
   end 
-=end
+
 end
 
 include Enumerable
@@ -132,6 +129,21 @@ test = [1,343,3,4,600,1]
 #b = test.any?
 #p a,b
 
-a = test.my_none?
-b = test.none?
-p a,b
+#a = test.my_none?
+#b = test.none?
+#p a,b
+
+#a = test.my_count
+#b = test.count
+#p a,b
+#newProc = Proc.new {|x| x + 5}
+#a = test.my_map(&newProc)
+#b = test.map(&newProc)
+#p a,b
+
+#a = test.my_inject{|sum, x|  x + sum}
+#b = test.inject(:+){|sum, x|  x + sum}
+#p  b
+
+#p multiply_els(test)
+#p test.inject{|prod, x| prod * x}
