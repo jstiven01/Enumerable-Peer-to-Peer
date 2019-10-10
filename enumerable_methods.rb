@@ -99,7 +99,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     new_self
   end
 
-  def my_inject(parm1 = nil, parm2 = nil) # rubocop:disable Metrics/CyclomaticComplexity
+  def my_inject(parm1 = nil, parm2 = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
     if block_given? && parm1
       acc = parm1
       my_each { |element| acc = yield(acc, element) }
