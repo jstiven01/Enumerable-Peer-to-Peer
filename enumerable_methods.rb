@@ -70,7 +70,6 @@ module Enumerable
   end
 
   def my_count(number = nil)
-
     count = 0
     if block_given?
       my_each do |x|
@@ -78,7 +77,7 @@ module Enumerable
       end
     elsif number
       my_each do |x|
-        count += 1 if element == number
+        count += 1 if x == number
       end
     else
       count = length
@@ -101,31 +100,24 @@ module Enumerable
   end
  
   def my_inject(parm1 = nil, parm2 = nil)
-    operation = nil
-    if parm1.is_a?(Symbol) && parm2.nil? && !block_given?
-      operation = parm1.to_s
-      operation.sub! ":", ""
-      acc = self[0]
-      displace_position = 1
-    elsif parm1.is_a?(Integer) && parm2.is_a?(Symbol) && !block_given?
-      operation = parm2.to_s
-      operation.sub! ":", ""
+    if block_given? && !parm1.nil? 
       acc = parm1
-      displace_position = 0
-    elsif parm1.is_a?(Integer) && block_given?
-      acc = parm1
-      displace_position = 0
-    elsif parm1.nil? && block_given?
+      my_each { |element| acc = yield(acc, element) }
+    elsif block_given? && parm1.nil? 
       acc = self[0]
-      displace_position = 1
-    end
-
-    (length - displace_position).times do |x|
-      if operation
-        acc = acc.method(operation).(self[x + displace_position])
-      else
-        acc = yield(acc, self[x + displace_position])
+      my_each_with_index do |element, index|
+        acc = yield(acc, element) unless index.zero?
       end
+    elsif parm2.nil?
+      acc = self[0]
+      operation = parm1.to_proc
+      my_each_with_index do |element, index|
+        acc = operation.call(acc, element) unless index.zero?
+      end
+    else
+      acc = parm1
+      operation = parm2.to_proc
+      my_each { |element| acc = operation.call(acc, element) }
     end
     acc
   end 
@@ -193,3 +185,4 @@ b = test.inject{|sum, x|  x + sum}
 p  a,b
 
 p multiply_els(test)
+
