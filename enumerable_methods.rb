@@ -36,35 +36,30 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
         next if yield x
 
         return false
-        break
       end
     elsif !obj
       my_each do |x|
         next if x
 
         return false
-        break
       end
     elsif obj.is_a? (Regexp)
       my_each do |x|
         next if x.match(obj)
 
         return false
-        break
       end
     elsif obj.class == Class
       my_each do |x|
         next if x.is_a?(obj)
 
         return false
-        break
       end
     else
       my_each do |x|
         next if x == obj
 
         return false
-        break
       end
     end
     true
@@ -76,51 +71,69 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
         next unless yield x
 
         return true
-        break
       end
     elsif !obj
       my_each do |x|
         next unless x
 
         return true
-        break
       end
     elsif obj.is_a? (Regexp)
       my_each do |x|
         next if x.match(obj) == nil
 
         return true
-        break
       end
     elsif obj.class == Class
       my_each do |x|
         next unless x.is_a?(obj)
 
         return true
-        break
       end
     else
       my_each do |x|
         next unless x == obj
 
         return true
-        break
       end
     end
     false
   end
 
-  def my_none?
-    flag = true
-    return !flag unless block_given?
+  def my_none?(obj = nil)
+    
+    if block_given? 
+      my_each do |x|
+        next unless yield x
 
-    my_each do |x|
-      next unless yield x
+        return false
+      end
+    elsif !obj
+      my_each do |x|
+        next unless x
 
-      flag = false
-      break
+        return false
+      end
+    elsif obj.is_a? (Regexp)
+      my_each do |x|
+        next if x.match(obj) == nil
+
+        return false
+      end
+    elsif obj.class == Class
+      my_each do |x|
+        next unless x.is_a?(obj)
+
+        return false
+      end
+    else
+      my_each do |x|
+        next unless x == obj
+
+        return false
+      end
     end
-    flag
+    true
   end
 
   def my_count(number = nil)
@@ -199,35 +212,36 @@ end
 
 
 #my_any
-array = [7, 8, 1, 4, 5, 0, 8, 4, 7, 6, 7, 8, 4, 8, 8, 6, 8, 0, 1, 7, 0, 2, 6, 6, 3, 1, 6, 6, 8, 5, 0, 2, 3, 7, 8, 7, 1, 5, 4, 4, 5, 1, 3, 5, 8, 7, 3, 3, 0, 0, 4, 1, 6, 2, 0, 4, 2, 1, 8, 3, 3, 6, 0, 8, 4, 4, 1, 6, 4, 6, 5, 3, 6, 6, 8, 6, 8, 7, 0, 6, 6, 2, 8, 8, 2, 1, 8, 5, 0, 5, 0, 3, 6, 4, 5, 8, 3, 3, 2, 1]
-true_block = proc { |num| num <= 3 }
-puts array.any?(&true_block)
-puts array.my_any?(&true_block)
-true_array = [nil, false, true, []]
-puts true_array.any?
-puts true_array.my_any?
-puts array.any?(Integer)
-puts array.my_any?(Integer)
-words = ["dog", "door", "rod", "blade"]
-puts words.any?(/z/)
-puts words.my_any?(/z/)
-words[0] = 'cat'
-puts words.any?('cat')
-puts words.my_any?('cat')
-=begin
+#array = [7, 8, 1, 4, 5, 0, 8, 4, 7, 6, 7, 8, 4, 8, 8, 6, 8, 0, 1, 7, 0, 2, 6, 6, 3, 1, 6, 6, 8, 5, 0, 2, 3, 7, 8, 7, 1, 5, 4, 4, 5, 1, 3, 5, 8, 7, 3, 3, 0, 0, 4, 1, 6, 2, 0, 4, 2, 1, 8, 3, 3, 6, 0, 8, 4, 4, 1, 6, 4, 6, 5, 3, 6, 6, 8, 6, 8, 7, 0, 6, 6, 2, 8, 8, 2, 1, 8, 5, 0, 5, 0, 3, 6, 4, 5, 8, 3, 3, 2, 1]
+#true_block = proc { |num| num <= 3 }
+#puts array.any?(&true_block)
+#puts array.my_any?(&true_block)
+#true_array = [nil, false, true, []]
+#puts true_array.any?
+#puts true_array.my_any?
+#puts array.any?(Integer)
+#puts array.my_any?(Integer)
+#words = ["dog", "door", "rod", "blade"]
+#puts words.any?(/z/)
+#puts words.my_any?(/z/)
+#words[0] = 'cat'
+#puts words.any?('cat')
+#puts words.my_any?('cat')
+
 #my_none
 false_array = [nil, false, nil, false]
 puts false_array.none?
-puts false_array.my_none
+puts false_array.my_none?
 array = [7, 8, 1, 4, 5, 0, 8, 4, 7, 6, 7, 8, 4, 8, 8, 6, 8, 0, 1, 7, 0, 2, 6, 6, 3, 1, 6, 6, 8, 5, 0, 2, 3, 7, 8, 7, 1, 5, 4, 4, 5, 1, 3, 5, 8, 7, 3, 3, 0, 0, 4, 1, 6, 2, 0, 4, 2, 1, 8, 3, 3, 6, 0, 8, 4, 4, 1, 6, 4, 6, 5, 3, 6, 6, 8, 6, 8, 7, 0, 6, 6, 2, 8, 8, 2, 1, 8, 5, 0, 5, 0, 3, 6, 4, 5, 8, 3, 3, 2, 1]
 puts array.none?(String)
-puts array.my_none(String)
+puts array.my_none?(String)
 words = %w[dog door rod blade]
 puts words.none?(/z/)
-puts words.my_none(/z/)
+puts words.my_none?(/z/)
 words[0] = 5
 puts words.none?(5)
-puts words.my_none(5)
+puts words.my_none?(5)
+=begin
 #my_count
 array = [7, 8, 1, 4, 5, 0, 8, 4, 7, 6, 7, 8, 4, 8, 8, 6, 8, 0, 1, 7, 0, 2, 6, 6, 3, 1, 6, 6, 8, 5, 0, 2, 3, 7, 8, 7, 1, 5, 4, 4, 5, 1, 3, 5, 8, 7, 3, 3, 0, 0, 4, 1, 6, 2, 0, 4, 2, 1, 8, 3, 3, 6, 0, 8, 4, 4, 1, 6, 4, 6, 5, 3, 6, 6, 8, 6, 8, 7, 0, 6, 6, 2, 8, 8, 2, 1, 8, 5, 0, 5, 0, 3, 6, 4, 5, 8, 3, 3, 2, 1]
 puts array.count
