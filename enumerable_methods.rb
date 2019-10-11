@@ -31,7 +31,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
   end
 
   def my_all?(obj = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    if block_given? 
+    if block_given?
       my_each do |x|
         next if yield x
 
@@ -43,7 +43,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
 
         return false
       end
-    elsif obj.is_a? (Regexp)
+    elsif obj.is_a? Regexp
       my_each do |x|
         next if x.match(obj)
 
@@ -66,7 +66,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
   end
 
   def my_any?(obj = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    if block_given? 
+    if block_given?
       my_each do |x|
         next unless yield x
 
@@ -78,9 +78,9 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
 
         return true
       end
-    elsif obj.is_a? (Regexp)
+    elsif obj.is_a? Regexp
       my_each do |x|
-        next if x.match(obj) == nil
+        next if x.match(obj).nil?
 
         return true
       end
@@ -100,9 +100,8 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
     false
   end
 
-  def my_none?(obj = nil)
-    
-    if block_given? 
+  def my_none?(obj = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+    if block_given?
       my_each do |x|
         next unless yield x
 
@@ -114,9 +113,9 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
 
         return false
       end
-    elsif obj.is_a? (Regexp)
+    elsif obj.is_a? Regexp
       my_each do |x|
-        next if x.match(obj) == nil
+        next if x.match(obj).nil?
 
         return false
       end
@@ -167,7 +166,7 @@ module Enumerable # rubocop:disable Metrics/ModuleLength
   end
 
   def my_inject(parm1 = nil, parm2 = nil) # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-    arr = self.to_a
+    arr = to_a
     if block_given? && parm1
       acc = parm1
       arr.my_each { |element| acc = yield(acc, element) }
